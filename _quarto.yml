@@ -1,0 +1,24 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "PLAN372"
+  sidebar:
+    search: true
+    contents:
+      - href: index.qmd
+        text: Home
+      - about.qmd
+      - financial_modeling_analysis.qmd
+
+format:
+  html:
+    theme:
+      light: minty
+      dark: slate
+    css: styles.css
+    toc: true
+
+
+

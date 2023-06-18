@@ -1,0 +1,73 @@
+---
+title: "Financial modeling and Analysis"
+editor: visual
+---
+
+This chapter explains the principles of financial modeling and analysis for energy projects, including cash flow analysis, discounted cash flow (DCF) analysis, sensitivity analysis, and financial metrics (e.g., NPV, IRR).
+
+We use `dplyr` for data manipulation and `ggplot2` for visualization.
+
+```{r, message=FALSE}
+library(dplyr)
+library(ggplot2)
+```
+
+First, we read in data for cash flow of a hypothetical energy business.
+
+```{r}
+# Load the cash flow data
+cash_flow_data <- read.csv("cashflow_energy.csv")
+```
+
+```{r}
+head(cash_flow_data)
+```
+The data includes: revenue, operating expenses, capital expenditures, and working capital.
+
+We calculate cash flow by substracting all other variables from revenue. Revenue is what we are getting and others are expenses.
+
+```{r}
+cash_flow_data <- cash_flow_data %>%
+  mutate(CashFlow = Revenue - OperatingExpenses - CapitalExpenditures - WorkingCapital)
+```
+
+We plot the cash flow every year.
+
+```{r}
+ggplot(cash_flow_data, aes(x = Year, y = CashFlow)) +
+  geom_line() +
+  labs(x = "Year", y = "Cash Flow", title = "Cash Flow Analysis") +
+  theme_minimal()
+```
+Cumulative cashflow and visualization
+
+```{r}
+cash_flow_data <- cash_flow_data %>%
+  mutate(CumulativeCashFlow = cumsum(CashFlow))
+```
+
+```{r}
+ggplot(cash_flow_data, aes(x = Year, y = CumulativeCashFlow)) +
+  geom_line() +
+  labs(x = "Year", y = "Cumulative Cash Flow", title = "Cumulative Cash Flow Analysis") +
+  theme_minimal()
+```
+Net Present Value
+
+```{r}
+discount_rate <- 0.10
+
+npv <- sum(cash_flow_data$CashFlow / (1 + discount_rate)^(cash_flow_data$Year - min(cash_flow_data$Year)))
+```
+
+```{r}
+cat("Cash Flow Analysis Results:\n")
+print(cash_flow_data)
+```
+
+
+```{r}
+cat("\nNet Present Value (NPV):\n")
+print(npv)
+```
+

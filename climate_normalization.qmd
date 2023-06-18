@@ -1,0 +1,42 @@
+---
+title: "Climate normalization of energy data"
+editor: visual
+---
+
+Create dummy data
+
+```{r}
+df <- data.frame(time = c("2010", "2011", "2012", "2013", "2014", "2015", "2016"),
+                 energy_use = c(200, 300, 400, 500, 600, 700, 800),
+                 temperature = c(18, 20, 21, 24, 27, 29, 31))
+```
+
+Establish baseline relationship
+
+```{r}
+# Train the linear regression model
+model <- lm(energy_use ~ temperature, data = df)
+```
+
+Normalize energy use data
+
+```{r}
+# Predict energy use based on the model
+predicted_energy <- predict(model, newdata = df)
+
+# Normalize energy use data
+normalized_energy <- df$energy_use - predicted_energy
+```
+
+Analysis and visualization
+
+```{r}
+# Compare normalized energy use and temperature
+plot(df$time, normalized_energy, type = "l", xlab = "Year", ylab = "Normalized Energy Use", main = "Climate Normalized Energy Use")
+lines(df$time, df$temperature, col = "red")
+legend("topright", legend = c("Normalized Energy Use", "Temperature"), col = c("black", "red"), lty = 1)
+
+# Calculate correlation between normalized energy use and temperature
+correlation <- cor(normalized_energy, df$temperature)
+```
+
